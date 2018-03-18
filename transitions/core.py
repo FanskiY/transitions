@@ -6,7 +6,6 @@
     and transition concepts.
 """
 
-
 try:
     from builtins import object
 except ImportError:
@@ -242,6 +241,10 @@ class Transition(object):
         Returns: boolean indicating whether or not the transition was
             successfully executed (True if successful, False if not).
         """
+        if not event_data.model.state == self.source:
+            _LOGGER.debug("%sTransition condition failed states do not match")
+            return False
+
         _LOGGER.debug("%sInitiating transition from state %s to state %s...",
                       event_data.machine.name, self.source, self.dest)
         machine = event_data.machine
@@ -931,7 +934,7 @@ class Machine(object):
             dest (string): Limits removal to transitions to a certain state.
         """
         if trigger:
-            events = (self.events[trigger], )
+            events = (self.events[trigger],)
         else:
             events = self.events.values()
         transitions = []
@@ -958,8 +961,8 @@ class Machine(object):
                {k: [t for t in v
                     # keep entries if source should not be filtered; same for dest.
                     if (source != "*" and t.source not in source) or (dest != "*" and t.dest not in dest)]
-                   # }.items() takes the result of the inner comprehension and uses it
-                   # for the outer comprehension (see first line of comment)
+                # }.items() takes the result of the inner comprehension and uses it
+                # for the outer comprehension (see first line of comment)
                 for k, v in self.events[trigger].transitions.items()}.items()
                if len(value) > 0}
         # convert dict back to defaultdict in case tmp is not empty
