@@ -116,14 +116,14 @@ class State(object):
         _LOGGER.debug("%sEntering state %s. Processing callbacks...", event_data.machine.name, self.name)
         for handle in self.on_enter:
             event_data.machine.callback(handle, event_data)
-        _LOGGER.info("%sEntered state %s", event_data.machine.name, self.name)
+        _LOGGER.debug("%sEntered state %s", event_data.machine.name, self.name)
 
     def exit(self, event_data):
         """ Triggered when a state is exited. """
         _LOGGER.debug("%sExiting state %s. Processing callbacks...", event_data.machine.name, self.name)
         for handle in self.on_exit:
             event_data.machine.callback(handle, event_data)
-        _LOGGER.info("%sExited state %s", event_data.machine.name, self.name)
+        _LOGGER.debug("%sExited state %s", event_data.machine.name, self.name)
 
     def add_callback(self, trigger, func):
         """ Add a new enter or exit callback.
